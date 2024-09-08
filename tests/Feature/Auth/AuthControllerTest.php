@@ -1,8 +1,10 @@
 <?php
 
+use App\Jobs\SendWelcomeMail;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\{RefreshDatabase, TestCase};
+use Illuminate\Support\Facades\Queue;
 
 use function Pest\Laravel\{actingAs, assertDatabaseCount, assertDatabaseHas, postJson};
 
@@ -74,4 +76,22 @@ it('should be able to register a new user in the application', function () {
     expect(auth()->check())->and(auth()->user())
         ->id->toBe(User::first()->id);
 
+});
+
+test('should send a email to new user', function () {
+    Queue::fake();
+
+    $payload = [
+        'name'                  => $this->faker->name,
+        'email'                 => $this->faker->unique()->safeEmail,
+        'password'              => 'password',
+        'password_confirmation' => 'password',
+    ];
+
+    $this->postJson('api/v1/register', $payload)
+        ->assertStatus(201);
+
+    Queue::assertPushed(SendWelcomeMail::class, function ($job) use ($payload) {
+        return $job->user->email === $payload['email'];
+    });
 });
