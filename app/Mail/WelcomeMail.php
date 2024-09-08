@@ -38,7 +38,7 @@ class WelcomeMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'welcome-mail',
             with: [
                 'username' => $this->user->name,
             ]
