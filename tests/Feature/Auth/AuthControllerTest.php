@@ -1,11 +1,12 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\{RefreshDatabase, TestCase};
 
 use function Pest\Laravel\{actingAs, assertDatabaseCount, assertDatabaseHas, postJson};
 
-uses(TestCase::class, RefreshDatabase::class)->in('Feature');
+uses(TestCase::class, RefreshDatabase::class, WithFaker::class)->in('Feature');
 
 it('should be able to login', function () {
     $user = User::factory()->create();
@@ -51,16 +52,21 @@ it('should be able to logout of the application', function () {
 });
 
 it('should be able to register a new user in the application', function () {
-    postJson('/api/v1/register', [
-        'name'                  => 'Test User',
-        'email'                 => 'test@user.com',
+    $name  = $this->faker->name;
+    $email = $this->faker->unique()->safeEmail;
+
+    $payload = [
+        'name'                  => $name,
+        'email'                 => $email,
         'password'              => 'password',
         'password_confirmation' => 'password',
-    ]);
+    ];
+
+    postJson('/api/v1/register', $payload)->assertStatus(201);
 
     assertDatabaseHas('users', [
-        'name'  => 'Test User',
-        'email' => 'test@user.com',
+        'name'  => $name,
+        'email' => $email,
     ]);
 
     assertDatabaseCount('users', 1);
