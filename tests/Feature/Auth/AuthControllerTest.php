@@ -1,11 +1,11 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\TestCase;
+use Illuminate\Foundation\Testing\{RefreshDatabase, TestCase};
 
 use function Pest\Laravel\{actingAs, assertDatabaseCount, assertDatabaseHas, postJson};
 
-uses(TestCase::class)->in('Feature');
+uses(TestCase::class, RefreshDatabase::class)->in('Feature');
 
 it('should be able to login', function () {
     $user = User::factory()->create();
@@ -40,7 +40,7 @@ it('should be able to logout of the application', function () {
 });
 
 it('should be able to register a new user in the application', function () {
-    $response = postJson('/api/v1/register', [
+    postJson('/api/v1/register', [
         'name'                  => 'Test User',
         'email'                 => 'test@user.com',
         'password'              => 'password',
@@ -49,7 +49,7 @@ it('should be able to register a new user in the application', function () {
 
     assertDatabaseHas('users', [
         'name'  => 'Test User',
-        'email' => 'test@user',
+        'email' => 'test@user.com',
     ]);
 
     assertDatabaseCount('users', 1);

@@ -29,4 +29,11 @@ class AuthController extends Controller
 
         return response()->json(status: StatusCode::HTTP_OK);
     }
+
+    public function register(Request $request): JsonResponse
+    {
+        $user = $this->authService->register($request->all());
+
+        return response()->json($user, StatusCode::HTTP_CREATED);
+    }
 }

@@ -8,4 +8,5 @@ interface IAuthService
 {
     public function login(array $credentials): string|AuthException;
     public function logout(): void;
+    public function register(array $data): array;
 }
