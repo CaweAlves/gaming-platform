@@ -17,10 +17,14 @@ class AuthController extends Controller
 
     public function login(Request $request): JsonResponse
     {
-        $credentials = $request->only('email', 'password');
-        $token       = $this->authService->login($credentials);
+        try {
+            $credentials = $request->only('email', 'password');
+            $token       = $this->authService->login($credentials);
 
-        return response()->json(['message' => 'Authorized', 'token' => $token], StatusCode::HTTP_OK);
+            return response()->json(['message' => 'Authorized', 'token' => $token], StatusCode::HTTP_OK);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], $th->getCode());
+        }
     }
 
     public function logout(Request $request): JsonResponse

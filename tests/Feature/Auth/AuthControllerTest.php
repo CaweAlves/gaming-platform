@@ -24,6 +24,17 @@ it('should be able to login', function () {
 
 });
 
+it('should make sure to inform the user an error when email and password doesnt work', function () {
+    $response = postJson('/api/v1/login', [
+        'email'    => 'invalid@user.com',
+        'password' => 'password',
+    ]);
+
+    expect($response->status())->toBe(401);
+    expect($response->json('message'))->toBe('Invalid credentials');
+    expect(auth()->check())->toBeFalse();
+});
+
 it('should be able to logout of the application', function () {
     $user = User::factory()->create();
 
@@ -55,6 +66,6 @@ it('should be able to register a new user in the application', function () {
     assertDatabaseCount('users', 1);
 
     expect(auth()->check())->and(auth()->user())
-    ->id->toBe(User::first()->id);
+        ->id->toBe(User::first()->id);
 
 });
