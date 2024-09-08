@@ -13,7 +13,8 @@
 
 uses(
     Tests\TestCase::class,
-    // Illuminate\Foundation\Testing\RefreshDatabase::class,
+    Illuminate\Foundation\Testing\RefreshDatabase::class,
+    Illuminate\Foundation\Testing\WithFaker::class,
 )->in('Feature');
 
 /*
@@ -29,6 +30,10 @@ uses(
 
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
+});
+
+expect()->extend('toBeValidToken', function () {
+    return ctype_xdigit($this->value) && strlen($this->value) === 64;
 });
 
 /*
