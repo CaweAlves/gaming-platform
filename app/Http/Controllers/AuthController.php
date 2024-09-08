@@ -22,4 +22,11 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Authorized', 'token' => $token], StatusCode::HTTP_OK);
     }
+
+    public function logout(Request $request): JsonResponse
+    {
+        $this->authService->logout();
+
+        return response()->json(status: StatusCode::HTTP_OK);
+    }
 }

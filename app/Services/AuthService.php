@@ -18,4 +18,13 @@ class AuthService implements IAuthService
 
         return $user->createToken('myApp')->accessToken;
     }
+
+    public function logout(): void
+    {
+        Auth::getUser()->tokens()->delete();
+
+        auth()->logout();
+        session()->invalidate();
+        session()->regenerateToken();
+    }
 }

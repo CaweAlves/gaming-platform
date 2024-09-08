@@ -3,7 +3,7 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase;
 
-use function Pest\Laravel\postJson;
+use function Pest\Laravel\{actingAs, postJson};
 
 uses(TestCase::class)->in('Feature');
 
@@ -22,4 +22,19 @@ it('should be able to login', function () {
     expect(auth()->check())->toBeTrue()
         ->and(auth()->user())->id->toBe($user->id);
 
+});
+
+it('should be able to logout of the application', function () {
+    $user = User::factory()->create();
+
+    actingAs($user);
+
+    expect(auth()->check())->toBeTrue()
+        ->and(auth()->user())->id->toBe($user->id);
+
+    $response = postJson('/api/v1/logout');
+
+    expect($response->status())->toBe(200);
+
+    expect(auth()->guest())->toBeTrue();
 });
