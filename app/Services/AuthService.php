@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Exceptions\AuthException;
+use App\Exceptions\Auth\InvalidCredentials;
 use App\Interfaces\Services\IAuthService;
 use App\Jobs\SendWelcomeMail;
 use App\Models\User;
@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthService implements IAuthService
 {
-    public function login(array $credentials): string|AuthException
+    public function login(array $credentials): string|InvalidCredentials
     {
         if (!Auth::attempt($credentials)) {
-            throw new AuthException();
+            throw new InvalidCredentials();
         }
 
         $user = Auth::getUser();
