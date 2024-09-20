@@ -15,14 +15,19 @@ class FriendshipController extends Controller
 
     public function sendRequest(Request $request, int $friend): JsonResponse
     {
-        $user    = auth()->user()->getAuthIdentifier();
-        $request = $this->friendshipService->createRequest($user, $friend);
+        try {
+            $user    = auth()->user()->getAuthIdentifier();
+            $request = $this->friendshipService->createRequest($user, $friend);
 
-        return response()->json([
-            'request' => $request,
-            'friend'  => User::find($friend),
-            'message' => 'Request sending with success.',
-            'status'  => FriendshipStatus::Pending,
-        ], 201);
+            return response()->json([
+                'request' => $request,
+                'friend'  => User::find($friend),
+                'message' => 'Request sending with success.',
+                'status'  => FriendshipStatus::Pending,
+            ], 201);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], $th->getCode());
+        }
+
     }
 }
