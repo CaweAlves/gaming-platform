@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Interfaces\Repositories\IUserRepository;
+use App\Interfaces\Repositories\{IFriendshipRepository, IUserRepository};
 use App\Interfaces\Services\{IAuthService, IUserService};
-use App\Repositories\UserRepository;
+use App\Repositories\{FriendshipRepository, UserRepository};
 use App\Services\{AuthService, UserService};
 use Illuminate\Support\ServiceProvider;
 
@@ -18,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(IAuthService::class, AuthService::class);
         $this->app->bind(IUserRepository::class, UserRepository::class);
         $this->app->bind(IUserService::class, UserService::class);
+        $this->app->bind(IFriendshipRepository::class, FriendshipRepository::class);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AuthController, UserController};
+use App\Http\Controllers\{AuthController, FriendshipController, UserController};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +15,10 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('users')->group(function () {
         Route::get('/search', [UserController::class, 'search']);
+    });
 
+    Route::prefix('friends')->group(function () {
+        Route::post('/requests/{friend}', [FriendshipController::class, 'sendRequest']);
     });
 
 });
