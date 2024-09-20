@@ -16,7 +16,7 @@ class UserService implements IUserService
     public function search(string $username): Collection|UserNotFoundException
     {
         if ($this->userRepository->findByUsername($username)->isEmpty()) {
-            throw UserNotFoundException::invalidCredentials();
+            throw new UserNotFoundException();
         }
 
         return $this->userRepository->findByUsername($username);
