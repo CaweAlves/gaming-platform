@@ -17,3 +17,13 @@ test('should be able find user by username', function () {
     $response->assertStatus(200)
         ->assertJson(fn (AssertableJson $json): AssertableJson => $json->has('users.0.name')->whereContains('users.0.name', $user->name));
 });
+
+test('should make sure to inform the user of an error when a user is not found', function () {
+    $user = User::factory()->create(['name' => 'validUser']);
+    actingAs($user);
+
+    $response = getJson(sprintf('/api/v1/users/search?username=%s', 'nonExistingUsers'));
+
+    $response->assertStatus(404)
+        ->assertJson(fn (AssertableJson $json): AssertableJson => $json->has('message')->whereContains('message', 'No users were found.'));
+});

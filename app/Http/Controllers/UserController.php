@@ -2,27 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\Repositories\IUserRepository;
+use App\Interfaces\Services\IUserService;
 use Illuminate\Http\{JsonResponse, Request};
 use Symfony\Component\HttpFoundation\Response as StatusCode;
 
 class UserController extends Controller
 {
-    public function __construct(protected IUserRepository $userRepository)
+    public function __construct(public IUserService $userService)
     {
+        $this->userService = $userService;
     }
 
     public function search(Request $request): JsonResponse
     {
-        $username = $request->input('username');
+        try {
+            $username = $request->input('username');
+            $users    = $this->userService->search($username);
 
-        if ($this->userRepository->findByUsername($username)->isEmpty()) {
-            return response()->json(['message' => 'nenhum usuario encontrado.'], StatusCode::HTTP_NOT_FOUND);
+            return response()->json(
+                ['users' => $users],
+                StatusCode::HTTP_OK
+            );
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], $th->getCode());
         }
-
-        return response()->json(
-            ['users' => $this->userRepository->findByUsername($username)],
-            StatusCode::HTTP_OK
-        );
     }
 }
