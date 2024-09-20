@@ -8,16 +8,9 @@ use Throwable;
 
 class AuthException extends Exception
 {
-    public function __construct($message = '', $code = StatusCode::HTTP_INTERNAL_SERVER_ERROR, ?Throwable $previous = null)
+    public function __construct($message = 'Invalid credentials.', $code = StatusCode::HTTP_UNAUTHORIZED, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
 
-    public static function invalidCredentials(): self
-    {
-        return new self(
-            'Invalid credentials',
-            StatusCode::HTTP_UNAUTHORIZED
-        );
-    }
 }

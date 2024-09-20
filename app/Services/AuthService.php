@@ -13,7 +13,7 @@ class AuthService implements IAuthService
     public function login(array $credentials): string|AuthException
     {
         if (!Auth::attempt($credentials)) {
-            throw AuthException::invalidCredentials();
+            throw new AuthException();
         }
 
         $user = Auth::getUser();

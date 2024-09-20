@@ -34,7 +34,7 @@ it('should make sure to inform the user an error when email and password doesnt 
     ]);
 
     expect($response->status())->toBe(401);
-    expect($response->json('message'))->toBe('Invalid credentials');
+    expect($response->json('message'))->toBe('Invalid credentials.');
     expect(auth()->check())->toBeFalse();
 });
 
