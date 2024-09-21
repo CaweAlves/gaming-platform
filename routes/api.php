@@ -20,6 +20,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('friends')->group(function () {
         Route::post('/requests/{friend}', [FriendshipController::class, 'sendRequest']);
         Route::post('/requests/accept/{friendRequest}', [FriendshipController::class, 'acceptRequest']);
+        Route::post('/requests/reject/{friendRequest}', [FriendshipController::class, 'rejectRequest']);
     });
 
 });

@@ -87,3 +87,33 @@ test('should be able accept a friend request', function () {
     expect($reponse->json('message'))->toContain('Friend request accepted successfully.');
     expect($reponse->json('status'))->toContain('accepted');
 });
+
+test('should be able to reject a friend request', function () {
+    $user   = User::factory()->create();
+    $friend = User::factory()->create();
+
+    actingAs($friend);
+
+    $request = Friendship::create([
+        'requester_id' => $user->id,
+        'recipient_id' => $friend->id,
+        'status'       => 'pending',
+    ]);
+
+    $requestPayload = [
+        'requester_id' => $user->id,
+        'recipient_id' => $friend->id,
+        "updated_at"   => Carbon::now()->format('Y-m-d H:i:s'),
+        "created_at"   => Carbon::now()->format('Y-m-d H:i:s'),
+    ];
+
+    $this->assertDatabaseHas('friendships', array_merge($requestPayload, ['status' => 'pending']));
+
+    $reponse = postJson(sprintf('api/v1/friends/requests/reject/%s', $request->id));
+
+    $this->assertDatabaseHas('friendships', array_merge($requestPayload, ['status' => 'rejected']));
+
+    $reponse->assertOk();
+    expect($reponse->json('message'))->toContain('Friend request rejected successfully.');
+    expect($reponse->json('status'))->toContain('rejected');
+});

@@ -9,4 +9,5 @@ interface IFriendshipService
 {
     public function createRequest(): Friendship|FriendRequestAlreadyExists;
     public function accept($request): Friendship;
+    public function reject($request): Friendship;
 }

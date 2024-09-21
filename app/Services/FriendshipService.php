@@ -39,4 +39,9 @@ class FriendshipService implements IFriendshipRepository
         return $this->friendshipRepository->update($request, ['status' => FriendshipStatus::Accepted]);
     }
 
+    public function reject(int $request): bool
+    {
+        return $this->friendshipRepository->update($request, ['status' => FriendshipStatus::Rejected]);
+    }
+
 }

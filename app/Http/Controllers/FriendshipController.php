@@ -38,4 +38,13 @@ class FriendshipController extends Controller
 
         return response()->json(['message' => FriendshipStatus::Accepted->getMessage(), 'status' => FriendshipStatus::Accepted]);
     }
+
+    public function rejectRequest(int $requestFriend): JsonResponse
+    {
+        if (!$this->friendshipService->reject($requestFriend)) {
+            return response()->json(['message' => 'Erro to reject friend request']);
+        }
+
+        return response()->json(['message' => FriendshipStatus::Rejected->getMessage(), 'status' => FriendshipStatus::Rejected]);
+    }
 }
