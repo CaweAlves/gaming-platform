@@ -26,7 +26,7 @@ class FriendshipService implements IFriendshipRepository
             throw new FriendRequestAlreadyExists();
         }
 
-        SendNewFriendRequestMail::dispatch(User::find($friendId));
+        SendNewFriendRequestMail::dispatch(User::find($userId));
 
         return $this->friendshipRepository->create(
             [

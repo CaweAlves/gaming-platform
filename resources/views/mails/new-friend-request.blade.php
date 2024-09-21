@@ -2,11 +2,11 @@
 <html>
 
 <head>
-    <title>Welcome Email</title>
+    <title>New Friend Request</title>
 </head>
 
 <body>
-    <h2>Welcome to our gaming platform, {{ $username }}</h2>
+    <h2>you received a new friend request, solicitante: {{ $username }}</h2>
 </body>
 
 </html>

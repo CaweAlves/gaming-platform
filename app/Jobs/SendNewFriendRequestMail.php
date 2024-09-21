@@ -15,7 +15,7 @@ class SendNewFriendRequestMail implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public User $likelyFriend)
+    public function __construct(public User $requester)
     {
         //
     }
@@ -25,6 +25,6 @@ class SendNewFriendRequestMail implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->likelyFriend->email)->send(new NewFriendRequestMail($this->likelyFriend));
+        Mail::to($this->requester->email)->send(new NewFriendRequestMail($this->requester));
     }
 }

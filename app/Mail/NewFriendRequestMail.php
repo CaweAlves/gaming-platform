@@ -16,7 +16,7 @@ class NewFriendRequestMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(protected readonly User $likelyFriend)
+    public function __construct(protected readonly User $requester)
     {
         //
     }
@@ -39,7 +39,7 @@ class NewFriendRequestMail extends Mailable
         return new Content(
             view: 'mails.new-friend-request',
             with: [
-                'username' => $this->likelyFriend->name,
+                'username' => $this->requester->name,
             ]
         );
     }
