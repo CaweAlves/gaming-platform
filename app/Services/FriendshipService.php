@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Enums\FriendshipStatus;
 use App\Exceptions\Friendship\FriendRequestAlreadyExists;
 use App\Interfaces\Repositories\IFriendshipRepository;
-use App\Jobs\{SendFriendRequestAcceptedMail, SendNewFriendRequestMail};
+use App\Jobs\{SendFriendRequestAcceptedMail, SendFriendRequestRejectedMail, SendNewFriendRequestMail};
 use App\Models\{Friendship, User};
 
 class FriendshipService implements IFriendshipRepository
@@ -47,7 +47,10 @@ class FriendshipService implements IFriendshipRepository
 
     public function reject(int $request): bool
     {
-        return $this->friendshipRepository->update($request, ['status' => FriendshipStatus::Rejected]);
+        $request = Friendship::find($request);
+        SendFriendRequestRejectedMail::dispatch(User::find($request->requester_id), User::find($request->recipient_id));
+
+        return $this->friendshipRepository->update($request->id, ['status' => FriendshipStatus::Rejected]);
     }
 
 }
