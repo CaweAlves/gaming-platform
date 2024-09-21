@@ -1,6 +1,6 @@
 <?php
 
-use App\Jobs\SendNewFriendRequestMail;
+use App\Jobs\{SendFriendRequestAcceptedMail, SendNewFriendRequestMail};
 use App\Models\{Friendship, User};
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\{RefreshDatabase, TestCase};
@@ -131,5 +131,24 @@ test('should be able to send an email to the user with each new friend request',
 
     Queue::assertPushed(SendNewFriendRequestMail::class, function ($job) use ($user) {
         return $job->requester->email === $user->email;
+    });
+});
+
+test('should be able to send an email to the user with each new friend request accepted', function () {
+    $user   = User::factory()->create();
+    $friend = User::factory()->create();
+
+    $request = Friendship::create([
+        'requester_id' => $user->id,
+        'recipient_id' => $friend->id,
+        'status'       => 'pending',
+    ]);
+
+    Queue::fake();
+    actingAs($friend);
+    postJson(sprintf('api/v1/friends/requests/accept/%s', $request->id))->assertOk();
+
+    Queue::assertPushed(SendFriendRequestAcceptedMail::class, function ($job) use ($user) {
+        return $job->user->email === $user->email;
     });
 });

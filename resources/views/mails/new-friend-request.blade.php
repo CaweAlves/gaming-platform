@@ -6,7 +6,7 @@
 </head>
 
 <body>
-    <h2>you received a new friend request, solicitante: {{ $username }}</h2>
+    <h2>you received a new friend request, requester: {{ $username }}</h2>
 </body>
 
 </html>
