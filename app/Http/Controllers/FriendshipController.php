@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\FriendshipStatus;
 use App\Models\User;
 use App\Services\FriendshipService;
-use Illuminate\Http\{JsonResponse, Request};
+use Illuminate\Http\{JsonResponse};
 
 class FriendshipController extends Controller
 {
@@ -13,7 +13,7 @@ class FriendshipController extends Controller
     {
     }
 
-    public function sendRequest(Request $request, int $friend): JsonResponse
+    public function sendRequest(int $friend): JsonResponse
     {
         try {
             $user    = auth()->user()->getAuthIdentifier();
@@ -28,6 +28,14 @@ class FriendshipController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], $th->getCode());
         }
+    }
 
+    public function acceptRequest(int $requestFriend): JsonResponse
+    {
+        if (!$this->friendshipService->accept($requestFriend)) {
+            return response()->json(['message' => 'Erro to accept friend request']);
+        }
+
+        return response()->json(['message' => 'Friend request accepted successfully.', 'status' => FriendshipStatus::Accepted]);
     }
 }

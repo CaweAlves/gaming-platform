@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Models\{Friendship, User};
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\{RefreshDatabase, TestCase};
 
@@ -56,4 +56,34 @@ test('should make sure to inform the user of an error when a request already exi
 
     $response->assertConflict();
     expect($response->json('message'))->toContain('There is already a pending request for this user.');
+});
+
+test('should be able accept a friend request', function () {
+    $user   = User::factory()->create();
+    $friend = User::factory()->create();
+
+    actingAs($friend);
+
+    $request = Friendship::create([
+        'requester_id' => $user->id,
+        'recipient_id' => $friend->id,
+        'status'       => 'pending',
+    ]);
+
+    $requestPayload = [
+        'requester_id' => $user->id,
+        'recipient_id' => $friend->id,
+        "updated_at"   => Carbon::now()->format('Y-m-d H:i:s'),
+        "created_at"   => Carbon::now()->format('Y-m-d H:i:s'),
+    ];
+
+    $this->assertDatabaseHas('friendships', array_merge($requestPayload, ['status' => 'pending']));
+
+    $reponse = postJson(sprintf('api/v1/friends/requests/accept/%s', $request->id));
+
+    $this->assertDatabaseHas('friendships', array_merge($requestPayload, ['status' => 'accepted']));
+
+    $reponse->assertOk();
+    expect($reponse->json('message'))->toContain('Friend request accepted successfully.');
+    expect($reponse->json('status'))->toContain('accepted');
 });
