@@ -130,6 +130,6 @@ test('should be able to send an email to the user with each new friend request',
     postJson('/api/v1/friends/requests/' . $friend->id)->assertCreated();
 
     Queue::assertPushed(SendNewFriendRequestMail::class, function ($job) use ($friend) {
-        return $job->likelyFriend->email === $friend->email;
+        return $job->requester->email === $friend->email;
     });
 });
