@@ -10,8 +10,8 @@ enum FriendshipStatus: string
     public function getMessage(): string
     {
         return match ($this) {
-            self::Pending  => "Solicitação de amizade pendente.",
-            self::Accepted => "Solicitação de amizade aceita."
+            self::Pending  => "Request sending with success.",
+            self::Accepted => "Friend request accepted successfully.",
         };
     }
 }

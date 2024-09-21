@@ -22,7 +22,7 @@ class FriendshipController extends Controller
             return response()->json([
                 'request' => $request,
                 'friend'  => User::find($friend),
-                'message' => 'Request sending with success.',
+                'message' => FriendshipStatus::Pending->getMessage(),
                 'status'  => FriendshipStatus::Pending,
             ], 201);
         } catch (\Throwable $th) {
@@ -36,6 +36,6 @@ class FriendshipController extends Controller
             return response()->json(['message' => 'Erro to accept friend request']);
         }
 
-        return response()->json(['message' => 'Friend request accepted successfully.', 'status' => FriendshipStatus::Accepted]);
+        return response()->json(['message' => FriendshipStatus::Accepted->getMessage(), 'status' => FriendshipStatus::Accepted]);
     }
 }
