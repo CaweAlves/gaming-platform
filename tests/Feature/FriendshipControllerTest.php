@@ -1,8 +1,10 @@
 <?php
 
+use App\Jobs\SendNewFriendRequestMail;
 use App\Models\{Friendship, User};
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\{RefreshDatabase, TestCase};
+use Illuminate\Support\Facades\Queue;
 
 use function Pest\Laravel\{actingAs, postJson};
 
@@ -116,4 +118,18 @@ test('should be able to reject a friend request', function () {
     $reponse->assertOk();
     expect($reponse->json('message'))->toContain('Friend request rejected successfully.');
     expect($reponse->json('status'))->toContain('rejected');
+});
+
+test('should be able to send an email to the user with each new friend request', function () {
+    $user   = User::factory()->create();
+    $friend = User::factory()->create();
+
+    Queue::fake();
+
+    actingAs($user);
+    postJson('/api/v1/friends/requests/' . $friend->id)->assertCreated();
+
+    Queue::assertPushed(SendNewFriendRequestMail::class, function ($job) use ($friend) {
+        return $job->likelyFriend->email === $friend->email;
+    });
 });

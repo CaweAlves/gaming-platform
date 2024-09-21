@@ -5,7 +5,8 @@ namespace App\Services;
 use App\Enums\FriendshipStatus;
 use App\Exceptions\Friendship\FriendRequestAlreadyExists;
 use App\Interfaces\Repositories\IFriendshipRepository;
-use App\Models\Friendship;
+use App\Jobs\SendNewFriendRequestMail;
+use App\Models\{Friendship, User};
 
 class FriendshipService implements IFriendshipRepository
 {
@@ -24,6 +25,8 @@ class FriendshipService implements IFriendshipRepository
         ) {
             throw new FriendRequestAlreadyExists();
         }
+
+        SendNewFriendRequestMail::dispatch(User::find($friendId));
 
         return $this->friendshipRepository->create(
             [
