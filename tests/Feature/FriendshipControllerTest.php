@@ -190,3 +190,21 @@ test("should not be able to accept a friend request if it's not pending", functi
     $reponse->assertConflict();
     expect($reponse->json('message'))->toContain(sprintf('The friend request cannot be accepted because it has already been %s.', $request->status->value));
 });
+
+test("should not be able to reject a friend request if it's not pending", function () {
+    $user   = User::factory()->create();
+    $friend = User::factory()->create();
+
+    actingAs($friend);
+
+    $request = Friendship::create([
+        'requester_id' => $user->id,
+        'recipient_id' => $friend->id,
+        'status'       => Arr::random(['accepted', 'rejected']),
+    ]);
+
+    $reponse = postJson(sprintf('api/v1/friends/requests/reject/%s', $request->id));
+
+    $reponse->assertConflict();
+    expect($reponse->json('message'))->toContain(sprintf('The friend request cannot be rejected because it has already been %s.', $request->status->value));
+});

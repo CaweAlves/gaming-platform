@@ -42,7 +42,7 @@ class FriendshipService implements IFriendshipRepository
         $request = Friendship::find($request);
 
         if ($request->status != FriendshipStatus::Pending) {
-            throw new FriendshipRequestAlreadyProcessedException(status: $request->status);
+            throw new FriendshipRequestAlreadyProcessedException(status: $request->status, action: 'accepted');
         }
 
         SendFriendRequestAcceptedMail::dispatch(User::find($request->requester_id), User::find($request->recipient_id));
@@ -53,6 +53,11 @@ class FriendshipService implements IFriendshipRepository
     public function reject(int $request): bool
     {
         $request = Friendship::find($request);
+
+        if ($request->status != FriendshipStatus::Pending) {
+            throw new FriendshipRequestAlreadyProcessedException(status: $request->status, action: 'rejected');
+        }
+
         SendFriendRequestRejectedMail::dispatch(User::find($request->requester_id), User::find($request->recipient_id));
 
         return $this->friendshipRepository->update($request->id, ['status' => FriendshipStatus::Rejected]);

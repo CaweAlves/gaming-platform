@@ -9,9 +9,9 @@ use Throwable;
 
 class FriendshipRequestAlreadyProcessedException extends Exception
 {
-    public function __construct(public FriendshipStatus $status, $message = "", $code = StatusCode::HTTP_CONFLICT, ?Throwable $previous = null)
+    public function __construct(public FriendshipStatus $status, public string $action = 'accepted', $message = "", $code = StatusCode::HTTP_CONFLICT, ?Throwable $previous = null)
     {
-        $message = sprintf('The friend request cannot be accepted because it has already been %s.', $status->value);
+        $message = sprintf('The friend request cannot be %s because it has already been %s.', $action, $status->value);
         parent::__construct($message, $code, $previous);
     }
 }
