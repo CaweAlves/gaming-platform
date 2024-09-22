@@ -4,6 +4,7 @@ use App\Jobs\{SendFriendRequestAcceptedMail, SendFriendRequestRejectedMail, Send
 use App\Models\{Friendship, User};
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\{RefreshDatabase, TestCase};
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Queue;
 
 use function Pest\Laravel\{actingAs, postJson};
@@ -170,4 +171,22 @@ test('should be able to send an email to the user with each new friend request r
     Queue::assertPushed(SendFriendRequestRejectedMail::class, function ($job) use ($user) {
         return $job->user->email === $user->email;
     });
+});
+
+test("should not be able to accept a friend request if it's not pending", function () {
+    $user   = User::factory()->create();
+    $friend = User::factory()->create();
+
+    actingAs($friend);
+
+    $request = Friendship::create([
+        'requester_id' => $user->id,
+        'recipient_id' => $friend->id,
+        'status'       => Arr::random(['accepted', 'rejected']),
+    ]);
+
+    $reponse = postJson(sprintf('api/v1/friends/requests/accept/%s', $request->id));
+
+    $reponse->assertConflict();
+    expect($reponse->json('message'))->toContain(sprintf('The friend request cannot be accepted because it has already been %s.', $request->status->value));
 });
