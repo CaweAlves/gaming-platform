@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\{Content, Envelope};
 use Illuminate\Queue\SerializesModels;
 
-class WelcomeMail extends Mailable
+class FriendRequestRejectedMail extends Mailable
 {
     use Queueable;
     use SerializesModels;
@@ -16,9 +16,8 @@ class WelcomeMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(
-        protected readonly User $user
-    ) {
+    public function __construct(public readonly User $friend)
+    {
         //
     }
 
@@ -28,7 +27,7 @@ class WelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome Mail',
+            subject: 'Friend Request Rejected Mail',
         );
     }
 
@@ -38,9 +37,9 @@ class WelcomeMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mails.welcome-mail',
+            view: 'mails.friend-request-rejected-mail',
             with: [
-                'username' => $this->user->name,
+                'username' => $this->friend->name,
             ]
         );
     }

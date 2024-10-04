@@ -1,6 +1,12 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/husky.sh"
 
+# Função para exibir mensagens de erro
+error_exit() {
+    echo "Erro: $1"
+    exit 1
+}
+
 # rodar os testes
 php artisan test --parallel | php
 if [ $? -ne 0 ]; then
@@ -17,4 +23,4 @@ do
     git add "${FILE}";
 done;
 
-exit 0;
+echo "Todos os testes passaram e os arquivos foram formatados com sucesso!"
