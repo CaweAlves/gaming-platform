@@ -22,7 +22,7 @@ class FriendshipController extends Controller
         return response()->json(['friends' => $friends]);
     }
 
-    public function index(): JsonResponse
+    public function pendingRequests(): JsonResponse
     {
         $requests = $this->friendshipService->getPendingRequests(auth()->user()->getAuthIdentifier());
 
