@@ -13,6 +13,15 @@ class FriendshipController extends Controller
     {
     }
 
+    public function index(): JsonResponse
+    {
+        $requests = User::with('friendRequests')
+            ->where('id', '=', auth()->user()->getAuthIdentifier())
+            ->get()->toArray();
+
+        return response()->json(['requests' => $requests]);
+    }
+
     public function sendRequest(int $friend): JsonResponse
     {
         try {

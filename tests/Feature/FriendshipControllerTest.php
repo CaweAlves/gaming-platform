@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\{RefreshDatabase, TestCase};
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Queue;
 
-use function Pest\Laravel\{actingAs, postJson};
+use function Pest\Laravel\{actingAs, getJson, postJson};
 
 uses(TestCase::class, RefreshDatabase::class)->in('Feature');
 
@@ -207,4 +207,23 @@ test("should not be able to reject a friend request if it's not pending", functi
 
     $reponse->assertConflict();
     expect($reponse->json('message'))->toContain(sprintf('The friend request cannot be rejected because it has already been %s.', $request->status->value));
+});
+
+test('should be able list a friend requests from a user', function () {
+    $user   = User::factory()->create();
+    $friend = User::factory()->create();
+
+    actingAs($friend);
+
+    $request = Friendship::create([
+        'requester_id' => $user->id,
+        'recipient_id' => $friend->id,
+        'status'       => 'pending',
+    ]);
+
+    $reponse = getJson('api/v1/friends/requests');
+
+    $reponse->assertOk();
+    expect($reponse->json('requests.0.friend_requests.0'))
+        ->toContain($request->id, $request->requester_id, $request->recipient_id);
 });
