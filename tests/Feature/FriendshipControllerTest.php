@@ -209,7 +209,7 @@ test("should not be able to reject a friend request if it's not pending", functi
     expect($reponse->json('message'))->toContain(sprintf('The friend request cannot be rejected because it has already been %s.', $request->status->value));
 });
 
-test('should be able list a friend requests from a user', function () {
+test("should be able to list pending requests from a user's friends", function () {
     $user   = User::factory()->create();
     $friend = User::factory()->create();
 
@@ -224,7 +224,7 @@ test('should be able list a friend requests from a user', function () {
     $reponse = getJson('api/v1/friends/requests');
 
     $reponse->assertOk();
-    expect($reponse->json('requests.0.friend_requests.0'))
+    expect($reponse->json('requests.0'))
         ->toContain($request->id, $request->requester_id, $request->recipient_id);
 });
 

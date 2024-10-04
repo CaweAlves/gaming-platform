@@ -7,7 +7,8 @@ use App\Models\Friendship;
 
 interface IFriendshipService
 {
-    public function createRequest(): Friendship|FriendRequestAlreadyExists;
-    public function reject($request): Friendship;
-    public function accept($request): Friendship|FriendshipRequestAlreadyProcessedException;
+    public function getPendingRequests(int $user): array;
+    public function createRequest(int $userId, int $friendId): Friendship|FriendRequestAlreadyExists;
+    public function accept(int $request): bool;
+    public function reject(int $request): bool|FriendshipRequestAlreadyProcessedException;
 }

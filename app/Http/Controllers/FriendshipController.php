@@ -16,17 +16,15 @@ class FriendshipController extends Controller
     public function friends(): JsonResponse
     {
         $friends = User::with('friends')
-            ->where('id', '=', auth()->user()->getAuthIdentifier())
-            ->get()->toArray();
+        ->where('id', '=', auth()->user()->getAuthIdentifier())
+        ->get()->toArray();
 
         return response()->json(['friends' => $friends]);
     }
 
     public function index(): JsonResponse
     {
-        $requests = User::with('friendRequests')
-            ->where('id', '=', auth()->user()->getAuthIdentifier())
-            ->get()->toArray();
+        $requests = $this->friendshipService->getPendingRequests(auth()->user()->getAuthIdentifier());
 
         return response()->json(['requests' => $requests]);
     }

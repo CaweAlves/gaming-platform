@@ -5,13 +5,19 @@ namespace App\Services;
 use App\Enums\FriendshipStatus;
 use App\Exceptions\Friendship\{FriendRequestAlreadyExists, FriendshipRequestAlreadyProcessedException};
 use App\Interfaces\Repositories\IFriendshipRepository;
+use App\Interfaces\Services\IFriendshipService;
 use App\Jobs\{SendFriendRequestAcceptedMail, SendFriendRequestRejectedMail, SendNewFriendRequestMail};
 use App\Models\{Friendship, User};
 
-class FriendshipService implements IFriendshipRepository
+class FriendshipService implements IFriendshipService
 {
     public function __construct(public IFriendshipRepository $friendshipRepository)
     {
+    }
+
+    public function getPendingRequests(int $user): array
+    {
+        return $this->friendshipRepository->pendingRequests($user)->toArray();
     }
 
     public function createRequest(int $userId, int $friendId): Friendship|FriendRequestAlreadyExists
@@ -50,7 +56,7 @@ class FriendshipService implements IFriendshipRepository
         return $this->friendshipRepository->update($request->id, ['status' => FriendshipStatus::Accepted]);
     }
 
-    public function reject(int $request): bool
+    public function reject(int $request): bool|FriendshipRequestAlreadyProcessedException
     {
         $request = Friendship::find($request);
 
