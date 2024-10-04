@@ -15,9 +15,13 @@ class UserController extends Controller
 
     public function friends(): JsonResponse
     {
-        $friends = $this->userService->getFriends(auth()->user()->getAuthIdentifier());
+        try {
+            $friends = $this->userService->getFriends(auth()->user()->getAuthIdentifier());
 
-        return response()->json(['friends' => $friends]);
+            return response()->json(['friends' => $friends], StatusCode::HTTP_OK);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], $th->getCode());
+        }
     }
 
     public function search(Request $request): JsonResponse
