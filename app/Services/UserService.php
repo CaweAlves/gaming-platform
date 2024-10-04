@@ -21,4 +21,13 @@ class UserService implements IUserService
 
         return $this->userRepository->findByUsername($username);
     }
+
+    public function getFriends(int $user): Collection|UserNotFoundException
+    {
+        if (!$this->userRepository->find($user)) {
+            throw new UserNotFoundException();
+        }
+
+        return $this->userRepository->findFriendsByUser($user);
+    }
 }

@@ -17,4 +17,23 @@ class UserRepository extends BaseRepository implements IUserRepository
     {
         return $this->model->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($username) . '%'])->get();
     }
+
+    public function findFriendsByUser(int $userId): Collection
+    {
+        return $this->model->newQuery()
+        ->whereIn('id', function ($query) use ($userId) {
+            $query->select('requester_id')
+                ->from('friendships')
+                ->where('recipient_id', $userId)
+                ->where('status', 'accepted')
+                ->union(
+                    $query->newQuery()
+                        ->select('recipient_id')
+                        ->from('friendships')
+                        ->where('requester_id', $userId)
+                        ->where('status', 'accepted')
+                );
+        })
+        ->get();
+    }
 }

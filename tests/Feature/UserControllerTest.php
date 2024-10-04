@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Models\{Friendship, User};
 use Illuminate\Foundation\Testing\{RefreshDatabase, TestCase};
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -26,4 +26,23 @@ test('should make sure to inform the user of an error when a user is not found',
 
     $response->assertStatus(404)
         ->assertJson(fn (AssertableJson $json): AssertableJson => $json->has('message')->whereContains('message', 'No users were found.'));
+});
+
+test("should be able to list a user's friends", function () {
+    $user   = User::factory()->create();
+    $friend = User::factory()->create();
+
+    actingAs($user);
+
+    $request = Friendship::create([
+        'requester_id' => $user->id,
+        'recipient_id' => $friend->id,
+        'status'       => 'accepted',
+    ]);
+
+    $reponse = getJson('api/v1/users/friends');
+
+    $reponse->assertOk();
+    expect($reponse->json('friends.0'))
+        ->toContain($friend->id);
 });

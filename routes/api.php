@@ -14,11 +14,11 @@ Route::prefix('v1')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 
     Route::prefix('users')->group(function () {
+        Route::get('/friends', [UserController::class, 'friends']);
         Route::get('/search', [UserController::class, 'search']);
     });
 
     Route::prefix('friends')->group(function () {
-        Route::get('/', [FriendshipController::class, 'friends']);
         Route::get('/requests', [FriendshipController::class, 'pendingRequests']);
         Route::post('/requests/{friend}', [FriendshipController::class, 'sendRequest']);
         Route::post('/requests/accept/{friendRequest}', [FriendshipController::class, 'acceptRequest']);

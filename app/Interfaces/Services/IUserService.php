@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Collection;
 interface IUserService
 {
     public function search(string $username): Collection|UserNotFoundException;
+    public function getFriends(int $user): Collection|UserNotFoundException;
 }
