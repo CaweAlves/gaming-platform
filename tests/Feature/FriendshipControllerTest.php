@@ -227,3 +227,22 @@ test('should be able list a friend requests from a user', function () {
     expect($reponse->json('requests.0.friend_requests.0'))
         ->toContain($request->id, $request->requester_id, $request->recipient_id);
 });
+
+test("should be able to list a user's friends", function () {
+    $user   = User::factory()->create();
+    $friend = User::factory()->create();
+
+    actingAs($user);
+
+    $request = Friendship::create([
+        'requester_id' => $user->id,
+        'recipient_id' => $friend->id,
+        'status'       => 'accepted',
+    ]);
+
+    $reponse = getJson('api/v1/friends');
+
+    $reponse->assertOk();
+    expect($reponse->json('friends.0.friends.0'))
+        ->toContain($request->recipient_id);
+});

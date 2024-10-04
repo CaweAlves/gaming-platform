@@ -18,6 +18,7 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::prefix('friends')->group(function () {
+        Route::get('/', [FriendshipController::class, 'friends']);
         Route::get('/requests', [FriendshipController::class, 'index']);
         Route::post('/requests/{friend}', [FriendshipController::class, 'sendRequest']);
         Route::post('/requests/accept/{friendRequest}', [FriendshipController::class, 'acceptRequest']);
