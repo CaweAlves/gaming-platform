@@ -6,6 +6,7 @@ use App\Enums\FriendshipStatus;
 use App\Models\User;
 use App\Services\FriendshipService;
 use Illuminate\Http\{JsonResponse};
+use Symfony\Component\HttpFoundation\Response as StatusCode;
 
 class FriendshipController extends Controller
 {
@@ -17,7 +18,7 @@ class FriendshipController extends Controller
     {
         $requests = $this->friendshipService->getPendingRequests(auth()->user()->getAuthIdentifier());
 
-        return response()->json(['requests' => $requests]);
+        return response()->json(['requests' => $requests], StatusCode::HTTP_OK);
     }
 
     public function sendRequest(int $friend): JsonResponse
@@ -31,7 +32,7 @@ class FriendshipController extends Controller
                 'friend'  => User::find($friend),
                 'message' => FriendshipStatus::Pending->getMessage(),
                 'status'  => FriendshipStatus::Pending,
-            ], 201);
+            ], StatusCode::HTTP_CREATED);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], $th->getCode());
         }
@@ -41,7 +42,7 @@ class FriendshipController extends Controller
     {
         try {
             if (!$this->friendshipService->accept($requestFriend)) {
-                return response()->json(['message' => 'Erro to accept friend request']);
+                return response()->json(['message' => 'Erro to accept friend request'], StatusCode::HTTP_OK);
             }
 
             return response()->json(['message' => FriendshipStatus::Accepted->getMessage(), 'status' => FriendshipStatus::Accepted]);
@@ -55,7 +56,7 @@ class FriendshipController extends Controller
     {
         try {
             if (!$this->friendshipService->reject($requestFriend)) {
-                return response()->json(['message' => 'Erro to reject friend request']);
+                return response()->json(['message' => 'Erro to reject friend request'], StatusCode::HTTP_OK);
             }
 
             return response()->json(['message' => FriendshipStatus::Rejected->getMessage(), 'status' => FriendshipStatus::Rejected]);
