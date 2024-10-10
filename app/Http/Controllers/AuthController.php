@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\{LoginRequest, RegisterRequest};
 use App\Interfaces\Services\IAuthService;
 use Illuminate\Http\{JsonResponse, Request};
 use Symfony\Component\HttpFoundation\Response as StatusCode;
@@ -16,7 +16,7 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
         try {
             $credentials = $request->only('email', 'password');
