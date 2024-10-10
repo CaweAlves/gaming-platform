@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
 use App\Interfaces\Services\IAuthService;
 use Illuminate\Http\{JsonResponse, Request};
 use Symfony\Component\HttpFoundation\Response as StatusCode;
@@ -34,7 +35,7 @@ class AuthController extends Controller
         return response()->json(status: StatusCode::HTTP_OK);
     }
 
-    public function register(Request $request): JsonResponse
+    public function register(RegisterRequest $request): JsonResponse
     {
         $user = $this->authService->register($request->all());
 
