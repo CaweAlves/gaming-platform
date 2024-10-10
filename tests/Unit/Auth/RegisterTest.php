@@ -22,7 +22,6 @@ it('should not be possible to register a new user if the email is invalid', func
 
     $response->assertStatus(422);
     expect($response->json("message"))->toContain("The email field must be a valid email address");
-    ;
 
     assertDatabaseCount('users', 0);
 });
@@ -41,7 +40,26 @@ it('should not be possible to register a new user if the email is null', functio
 
     $response->assertStatus(422);
     expect($response->json("message"))->toContain("The email field is required.");
-    ;
 
     assertDatabaseCount('users', 0);
+});
+
+it('should not be possible to register a new user if the email is not unique', function () {
+    $name  = $this->faker->name;
+    $email = str($this->faker->unique()->freeEmail);
+
+    $payload = [
+        'name'                  => $name,
+        'email'                 => $email,
+        'password'              => 'password',
+        'password_confirmation' => 'password',
+    ];
+
+    $response = postJson('/api/v1/register', $payload);
+    $response = postJson('/api/v1/register', $payload);
+
+    $response->assertStatus(422);
+    expect($response->json("message"))->toContain("The email has already been taken.");
+
+    assertDatabaseCount('users', 1);
 });
