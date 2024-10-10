@@ -63,3 +63,22 @@ it('should not be possible to register a new user if the email is not unique', f
 
     assertDatabaseCount('users', 1);
 });
+
+it('should not be possible to register a new user if the name is null', function () {
+    $email = str($this->faker->unique()->freeEmail);
+
+    $payload = [
+        'name'                  => '',
+        'email'                 => $email,
+        'password'              => 'password',
+        'password_confirmation' => 'password',
+    ];
+
+    $response = postJson('/api/v1/register', $payload);
+    $response = postJson('/api/v1/register', $payload);
+
+    $response->assertStatus(422);
+    expect($response->json("message"))->toContain("The name field is required.");
+
+    assertDatabaseCount('users', 0);
+});
