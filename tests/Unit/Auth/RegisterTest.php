@@ -9,7 +9,7 @@ uses(TestCase::class, RefreshDatabase::class, WithFaker::class);
 
 it('should not be possible to register a new user if the email is invalid', function () {
     $name  = $this->faker->name;
-    $email = str($this->faker->email)->replace('.com', '');
+    $email = str($this->faker->unique()->email)->replace('.com', '');
 
     $payload = [
         'name'                  => $name,
