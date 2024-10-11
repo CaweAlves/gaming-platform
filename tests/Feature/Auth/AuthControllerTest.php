@@ -33,7 +33,7 @@ it('should make sure to inform the user an error when email and password doesnt 
         'password' => 'password',
     ]);
 
-    expect($response->status())->toBe(401);
+    expect($response->status())->toBe(422);
     expect($response->json('message'))->toBe('Invalid credentials.');
     expect(auth()->check())->toBeFalse();
 });
@@ -55,7 +55,7 @@ it('should be able to logout of the application', function () {
 
 it('should be able to register a new user in the application', function () {
     $name  = $this->faker->name;
-    $email = $this->faker->unique()->safeEmail;
+    $email = $this->faker->unique()->freeEmail;
 
     $payload = [
         'name'                  => $name,
@@ -83,7 +83,7 @@ test('should send a email to new user', function () {
 
     $payload = [
         'name'                  => $this->faker->name,
-        'email'                 => $this->faker->unique()->safeEmail,
+        'email'                 => $this->faker->unique()->freeEmail,
         'password'              => 'password',
         'password_confirmation' => 'password',
     ];
