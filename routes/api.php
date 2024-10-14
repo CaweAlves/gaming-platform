@@ -29,4 +29,4 @@ Route::prefix('v1')->group(function () {
         Route::post('/messages/{friend}', [ChatMessageController::class, 'send']);
     });
 
-});
+})->middleware('auth:sanctum');
