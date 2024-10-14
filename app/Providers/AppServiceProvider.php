@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Interfaces\Repositories\{IFriendshipRepository, IUserRepository};
-use App\Interfaces\Services\{IAuthService, IFriendshipService, IUserService};
-use App\Repositories\{FriendshipRepository, UserRepository};
-use App\Services\{AuthService, FriendshipService, UserService};
+use App\Interfaces\Repositories\{IChatMessageRepository, IFriendshipRepository, IUserRepository};
+use App\Interfaces\Services\{IAuthService, IChatMessageService, IFriendshipService, IUserService};
+use App\Repositories\{ChatMessageRepository, FriendshipRepository, UserRepository};
+use App\Services\{AuthService, ChatMessageService, FriendshipService, UserService};
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(IUserService::class, UserService::class);
         $this->app->bind(IFriendshipRepository::class, FriendshipRepository::class);
         $this->app->bind(IFriendshipService::class, FriendshipService::class);
+        $this->app->bind(IChatMessageService::class, ChatMessageService::class);
+        $this->app->bind(IChatMessageRepository::class, ChatMessageRepository::class);
     }
 
     /**
