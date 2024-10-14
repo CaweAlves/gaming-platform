@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AuthController, FriendshipController, UserController};
+use App\Http\Controllers\{AuthController, ChatMessageController, FriendshipController, UserController};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +23,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/requests/{friend}', [FriendshipController::class, 'sendRequest']);
         Route::post('/requests/accept/{friendRequest}', [FriendshipController::class, 'acceptRequest']);
         Route::post('/requests/reject/{friendRequest}', [FriendshipController::class, 'rejectRequest']);
+    });
+
+    Route::prefix('chat')->group(function () {
+        Route::post('/messages/{friend}', [ChatMessageController::class, 'send']);
     });
 
 });
