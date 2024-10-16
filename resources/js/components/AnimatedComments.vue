@@ -20,7 +20,7 @@ const createEmoji = () => {
   const newEmoji = {
     id: emojiId++,
     content: messages[Math.floor(Math.random() * messages.length)],
-    x: Math.random() * 80 + 10,
+    x: 80,
     y: 0,
     opacity: 1
   }
@@ -35,12 +35,12 @@ const createEmoji = () => {
       requestAnimationFrame(animateEmoji)
     }
   }
-  
+  animateEmoji(newEmoji)
   requestAnimationFrame(animateEmoji)
 }
 
 onMounted(() => {
-  animationInterval = setInterval(createEmoji, 2000)
+  animationInterval = setInterval(createEmoji, 200)
 })
 
 onUnmounted(() => {
@@ -51,12 +51,12 @@ onUnmounted(() => {
 <style scoped>
 .emoji-enter-active,
 .emoji-leave-active {
-  transition: all 0.5s ease;
+  transition: all 1.5s ease-out;
 }
 .emoji-enter-from,
 .emoji-leave-to {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(50px);
 }
 </style>
 
@@ -66,7 +66,7 @@ onUnmounted(() => {
       <div
         v-for="emoji in emojis"
         :key="emoji.id"
-        class="absolute text-4xl"
+        class="absolute text-2xl"
         :style="{
           left: `${emoji.x}%`,
           bottom: `${emoji.y}%`,
