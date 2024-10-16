@@ -7,11 +7,16 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
     "axios": "^1.6.4",
     "husky": "^9.1.5",
     "laravel-echo": "^1.16.1",
-    "laravel-vite-plugin": "^1.0",
+    "laravel-vite-plugin": "^1.0.5",
     "pusher-js": "^8.4.0-rc2",
-    "vite": "^5.0"
+    "vite": "^5.4.9",
+    "vue": "^3.5.12",
+    "vue-router": "^4.4.5",
+    "vue3-toastify": "^0.2.3",
+    "vuex": "^4.1.0"
   }
 }
