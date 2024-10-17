@@ -61,19 +61,6 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped>
-.emoji-enter-active,
-.emoji-leave-active {
-  transition: all 1.5s ease-out;
-}
-
-.emoji-enter-from,
-.emoji-leave-to {
-  opacity: 0;
-  transform: translateY(50px);
-}
-</style>
-
 <template>
   <div class="absolute inset-0 pointer-events-none overflow-hidden">
     <TransitionGroup name="emoji" tag="div">
@@ -87,3 +74,16 @@ onUnmounted(() => {
     </TransitionGroup>
   </div>
 </template>
+
+<style scoped>
+.emoji-enter-active,
+.emoji-leave-active {
+  transition: all 1.5s ease-out;
+}
+
+.emoji-enter-from,
+.emoji-leave-to {
+  opacity: 0;
+  transform: translateY(50px);
+}
+</style>
