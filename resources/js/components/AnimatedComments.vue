@@ -10,7 +10,20 @@ const messages = [
   "🎉 Parabéns!",
   "👏 Impressionante!",
   "🙌 Você arrasou!",
-  "🤩 Fantástico!"
+  "🤩 Fantástico!",
+  "😱 Jogada épica!",
+  "🏆 Campeão absoluto!",
+  "🌟 Estrela nasce em você!",
+  "🚀 Alcançou a estratósfera!",
+  "💥 Explosão de habilidade!",
+  "🎭 Cena de glória!",
+  "📢 Anunciando o campeão!",
+  "😍 Simplesmente incrível!",
+  "🕺 Dança da vitória eterna!",
+  "💪 Força e determinação!",
+  "🌟 Jogada Brilhante!",
+  "🎵 Melodia de vitória!",
+  "🖼️ Obra-prima de jogabilidade!",
 ]
 
 let emojiId = 0
@@ -25,9 +38,9 @@ const createEmoji = () => {
     opacity: 1
   }
   emojis.value.push(newEmoji)
-  
+
   const animateEmoji = () => {
-    newEmoji.y += 1
+    newEmoji.y += 0.8
     newEmoji.opacity -= 0.02
     if (newEmoji.opacity <= 0) {
       emojis.value = emojis.value.filter(e => e.id !== newEmoji.id)
@@ -40,7 +53,7 @@ const createEmoji = () => {
 }
 
 onMounted(() => {
-  animationInterval = setInterval(createEmoji, 200)
+  animationInterval = setInterval(createEmoji, 400)
 })
 
 onUnmounted(() => {
@@ -53,6 +66,7 @@ onUnmounted(() => {
 .emoji-leave-active {
   transition: all 1.5s ease-out;
 }
+
 .emoji-enter-from,
 .emoji-leave-to {
   opacity: 0;
@@ -63,16 +77,11 @@ onUnmounted(() => {
 <template>
   <div class="absolute inset-0 pointer-events-none overflow-hidden">
     <TransitionGroup name="emoji" tag="div">
-      <div
-        v-for="emoji in emojis"
-        :key="emoji.id"
-        class="absolute text-2xl"
-        :style="{
-          left: `${emoji.x}%`,
-          bottom: `${emoji.y}%`,
-          opacity: emoji.opacity
-        }"
-      >
+      <div v-for="emoji in emojis" :key="emoji.id" class="absolute text-xl" :style="{
+        left: `${emoji.x}%`,
+        bottom: `${emoji.y}%`,
+        opacity: emoji.opacity
+      }">
         {{ emoji.content }}
       </div>
     </TransitionGroup>
